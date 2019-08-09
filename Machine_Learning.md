@@ -23,13 +23,12 @@ Sohee Hwang, Start: 2019/8/8
 > ### 1.3.1 지도학습과 비지도학습<br>
 >> **학습하는 동안의 감독 형태나 정보량** 이 기준<br>
 >>> #### 지도학습<br>
->>> 알고리즘에 주입하는 훈련 데이터에 레이블이라는 원하는 답이 포함됨<br>
->>> **분류**가 가장 대표적인 지도학습 작업(스팸필터)<br>
->>> **회귀**가 그다음으로 대표적인 지도학습 작업 (예측변수라 부르는 특성(feature)을 사용해 타겟 수치를 예측하는 것)<br>
->>> k-NN / Linear Regression / Logistic Regression / SVM / Decision Tree / Random Forest / Neural Network<br>
-
+>>> * 알고리즘에 주입하는 훈련 데이터에 레이블이라는 원하는 답이 포함됨<br>
+>>> * **분류**가 가장 대표적인 지도학습 작업(스팸필터)<br>
+>>> * **회귀**가 그다음으로 대표적인 지도학습 작업 (예측변수라 부르는 특성(feature)을 사용해 타겟 수치를 예측하는 것)<br>
+>>> * k-NN / Linear Regression / Logistic Regression / SVM / Decision Tree / Random Forest / Neural Network<br>
 >>> #### 비지도학습<br>
-훈련데이터에 레이블이 없어서 시스템이 아무런 도움 없이 학습해야하는 방법<br>
+>>> 훈련데이터에 레이블이 없어서 시스템이 아무런 도움 없이 학습해야하는 방법<br>
 >>> * Clutsering (K-Means, HCA, Expectation Maximization)<br>
 >>> * Visualizaition & dimensionality reduction(PCA, Kernel PCA, LLA, t=SNE)<br>
 >>> * Association rule learning(Apriori, Eclat)<br>
@@ -48,8 +47,7 @@ Sohee Hwang, Start: 2019/8/8
 
 >>> #### 사례 기반 학습
 >>> 시스템이 사례를 기억함으로써 학습하는 것
->>> Ex1. 스팸 필터에서 메일 사이의 유사도를 측정해서 스팸을 분류하는 것
-
+>>> Ex1. 스팸 필터에서 메일 사이의 유사도를 측정해서 스팸을 분류하는 것 <br>
 >>> #### 모델 기반 학습
 >>> 샘플로부터 일반화 시키는 다른 방법은 이 샘플들의 모델을 만들어 예측에 사용하는 것
 >>> 데이터를 분석-> 모델 선택 -> 훈련 데이터로 모델을 훈련 -> 새로운 데이터에 모델을 적용해 예측하고 일반화되길 기대
