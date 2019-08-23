@@ -1,3 +1,9 @@
+# ubuntu 18.04 Installation
+- cuda 10.0
+- cudnn 7.4
+- conda 4.7.11
+- tensorflow 1.13.0
+
 ## generate env
 <pre><code>
 conda --version
