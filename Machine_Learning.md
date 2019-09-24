@@ -122,36 +122,105 @@ Sohee Hwang, Start: 2019/8/8
 ## 2.4. 데이터 이해를 위한 탐색과 시각화
 > ### 2.4.1. 지리적 데이터 시각화
 >> * 기본 scatter plot
+
 <pre><code>
 housing.plot(kind="scatter", x="logitude", y="latitude", alpha=0.1)
+
 </code></pre>
 
 >> * 옵션 들어간 scatter plot
 >> 1. s / 원의 반지름은 구역의 인구 수
 >> 2. c / 색깔은 가격
+
 <pre><code>
 housing.plot(kind='scatter', x='longitude', y='latitude', alpha=0.4,
              s=housing['population']/100, label='population', figsize=(10,7),
              c='median_house_value', cmap=plt.get_cmap('jet), colorbar=True, shareex=False)
+
 </code></pre>
 
 > ### 2.4.2. 상관관계 조사
 > 데이터 셋이 너무 크지 않으므로 모든 특성 간의 표준 상관계수(피어슨의 r) 를 corr()로 계산
+
 <pre><code>
 corr_matrix = housing.corr()
 corr_matrix['median_house_value'].sort_values(ascending=False)
+
 </code></pre>
 > 특성 간의 관계를 확인하기 위해 산점도를 그려줄 수 있음
+
 <pre><code>
 from pandas.plotting import scatter_matrix
 
 attributes = ["median_house_value", "median_income", "total_rooms", "housing_median_age"]
 scatter_matrix(housing[attributes], figsize=(12,8))
+
 </code></pre>
 
 > ### 2.4.3. 특성 조합으로 실험
 
+## 2.5. 머신러닝 알고리즘을 위한 데이터 준비
+> ### 2.5.1. 데이터 정제
+>> dropna(), drop(), fillna()
+>> * scikit learn의 Imputer: 누락된 값 손쉽게 다루기
+
+<pre><code>
+from sklearn.preprocessing import Imputer
+
+imputer = Imputer(strategy='median')
+imputer.fit(housing_num)
+
+imputer.statisctics_ #각 특성의 중간값을 계산해서 저장해놓은 것
+X = imputer.transform(housing_num)
+
+housing_tr = pd.DataFrame(X, columns=housing_num.columns, index=list(housing.index.values))
+</code></pre>
+
+> ### 2.5.2. 텍스트와 범주형 특성 다루기
+>> * pandas.factorize() : 카테고리를 텍스트에서 숫자로 바꿔줌
+<pre><code>
+housing_cat_encoded, housing_categories = housing_cat.factorize()
+housing_cat_encoded = [1, 0, 2, ... ]
+housing_categories = ['<1H OCEAN', 'NEAR OCEAN', ... ]
+
+</code></pre>
+
+>> * OneHotEncoder: One-hot encoding
+<pre><code>
+from sklearn.preprocessing import OneHotEncoder
+
+# 얘는 텍스트->숫자->원핫 벡터 과정을 사용
+encoder = OneHotEncoder()
+housing_cat_1hot = encoder.fit_transform(housing_cat_encoded.reshape(-1,1))
+housing_cat_1hot.toarray()
+
+# 변환 한번에 해버리기
+import sklearn.preprocessing import CategoricalEncoder
+cat_encoder = CategoricalEncoder() # 밀집 행렬을 원할 경우, CategoricalEncoder(encoding='onehot-dense')
+
+housing_cat_reshaped = housing_cat.values.reshape(-1, 1)
+housing_cat_1hot = cat_encoder.fit(transform(housing_cat_reshaped)
+
+cat_encoder.categories_ = ['1H OCEAN', 'INLAND', 'NEAR BAY', ...]
+</pre></code>
+
+> ### 2.5.3. 나만의 변환기
+!! 이건 하고 싶을 떄 다시봐랏
+
+> ### 2.5.4 특성 스케일링
+
+
+
  
+ 
+ 
+ 
+ 
+ 
+
+
+
+
 
 
 <pre><code>
