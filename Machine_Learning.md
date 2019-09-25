@@ -1,6 +1,6 @@
  Hands-On Machine Learning with Scikit-Learn & TensorFlow
 ========================================================
-Sohee Hwang, Start: 2019/8/8
+Sohee Hwang, Start: 2019/8/8 Last Modified: 2019/9/25
 --------------------------------------------------------
 
 # Chapter1. 한눈에 보는 머신러닝
@@ -208,25 +208,188 @@ cat_encoder.categories_ = ['1H OCEAN', 'INLAND', 'NEAR BAY', ...]
 !! 이건 하고 싶을 떄 다시봐랏
 
 > ### 2.5.4 특성 스케일링
+>> *min-max 스케일링*과 *표준화(standardization)* 가 대표적
+>> 1. min-max 스케일링(normalization)
+>>> scikitlearn-> MinMaxScaler 변환기 제공 (0~1 사이가 싫다면, feature_range로 수정 가능)
+>> 2. 표준화(standardiation)
+>>> 평균을 빼고 표준편차로 나누어서 결과 분포의 분산이 1이 되도록 만듬
+>>> 범위의 상/하한이 없지만, 이상치에 영향을 덜받아 좋음
+>>> scikitlearn -> StandarScaler
 
+>>> *훈련 데이터에 대해서만 fit() / 테스트 데이터에 대해서는 transform()*
 
-
- 
- 
- 
- 
- 
- 
-
-
-
-
-
+> ### 2.5.4. 변환 파이프라인
+>> 모든 과정은 변환 단계가 많으며, 정확한 순서대로 실행되어야 함
+>> scikit-learn 에는 Pipeline Class가 존재함
 
 <pre><code>
-tf.Session()
+from skleran.pipeline import Pipeline
+frim sklearn.preprocessing import StandardScaler
+
+num_pipline = Pipeline([
+      ('imputer', Imuputer(startegy='median')),
+      ('attribs_adder', CombinedAttrivutesAdder()),
+      ('std_scaler', StandardScaler()),
+])
+
+housing_num_tr = num_pipeline.fit_transform(housing_num)
+</pre></code>
+
+>> * Pipeline은 연속된 단계를 나타내는 이름/추정기 쌍의 목록을 입력 받음
+>> * 마지막 단계에는 변환기와 추정기를 모두 사용할 수 있고, 그 외에는 모두 변환기여야 함(즉, fit_trainsform()을 가지고 있어야 함)
+
+<pre><code>
+from sklearn.base import BaseEstimator, TransformerMixin
+
+class DataFrameSelector(BaseEstimator, TransformerMixin):
+  def __init__(self, attribute_names):
+    self.attribute_names = attribute_names
+    
+  def fit(self, X, y=None):
+    return self
+    
+  def transform(self, X):
+    return X[self.attribute_names].values
+    
+</code></pre>
+>>>!!! 더보고싶으면 봐라!!!
+
+
+## 2.6. 모델 선택과 훈련
+
+> ### 2.5.1. 훈련 세트에서 훈련하고 평가하기
+
+>> * 선형 회귀모델 훈련 시키기
+<pre><code>
+from sklearn.linear_model import LinearRegression
+
+# 훈련
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared, housing_labels)
+
+# test
+test_prepro = full_pipeline.transform(test)
+lin_reg.predict(test_prepro)
+
+# mean_square_error
+from sklearn.metrics import mean_squared_error
+
+housing_prediction = lin_reg.predict(test_prepro)
+lin_mse = mean_squared_error(housing_labels, housing_predictions)
+lin_rmse = np.sqrt(lin_mse)
+</code></pre>
+
+>> * Decision Tree Regression 훈련 시키기
+
+<pre><code>
+from skleanr.tree import DecisionTreeRegressor
+
+# 훈련
+tree_reg = DecisionTreeRegressor()
+tree_reg.fit(housing_prepared, housing_labels)
+
+# test
+housing_predictions = tree_reg.predict(housing_prepared)
+tree_mse = mean_squared_error(housing_labels, housing_predictions)
+tree_rmse = np.sqrt(tree_mse)
 
 </code></pre>
+
+> ### 2.6.2. 교차 검증을 사용한 평가
+>> 역시나 sckit-learn 에는 교차검증 기능이 있다!
+>> K-fold-cross-validation: 훈련 세트를 fold라 불리는 10개의 subset으로 무작위 분할하고, 10번 훈련/평가 한다! 
+
+<pre><code>
+from sklearn.model_selection import cross_val_score
+
+scores = cross_val_score(tree_reg, housing_prepared, housing_labels,
+                         scoring='neg_mean_squared_error', cv=10)
+tree_rmse_scores = np.sqrt(-scores)
+
+>> * Random Forest 훈련 시키기
+
+<pre><code>
+form skleanr.ensemble import RandomForestRegressor
+
+forest_reg = RandomForestRegressor()
+forest_reg.fit(housing_prepared, housing_labels)
+[....]
+
+</code></pre>
+
+
+>> 실험한 모델들을 모두 저장해두는 것이 좋은데, 역시 sckit-learn은 또 제공합니다!
+<pre><code>
+from sklearn.externals import joblib
+
+# save
+joblib.dump(my_model, 'my_model.pkl')
+# load
+my_model_loaded = joblib.load('my_model.pkl')
+</code></pre>
+
+## 2.7. 모델 세부 튜닝
+> ### 2.7.1. 그리드 탐색
+>> 가장 쉬운거는 그냥 다 수동으로 조정하는 것이지요
+>> 근데 또 scikit-learn은 가지고 있다! GridSearchCV!!!!!
+
+<pre><code>
+from sklearn.model_selection import GridSearchCV
+
+param_grid = [
+  {'n_estimators': [3, 10, 30], 'max_features': [2, 4, 6, 8]},
+  {'bootstrap': [False], 'n_estimators': [3, 10], 'max_features': [2, 3, 4]},
+]
+
+forest_reg = RandomForestRegressor()
+
+grid_search = GridSearchCV(forest_reg, param_grid, cv=5,
+                           scoring='neg_mea_squared_error',
+                           retrun_train_score=True)
+                           
+grid_search.fit(housing_prepared, housing_labels)
+
+# best estimator
+grid_search.best_estimator_
+
+# score
+cvres = grid_search.cv_results_
+for mean_score, params in zip(cvres['mean_test_score'[, cvre['params']):
+    print(mp.sqrt(-mean_score), params)
+
+</code></pre>
+
+> ### 2.7.2. 랜덤 탐색
+>> 그리드 탐색은 비교적 적은수 조합일 때 좋고, 그 이상일 때는 랜덤 탐색!
+>> 또 scikit-learn에 있대! RandomizeSerachCV
+
+
+> ### 2.7.3. 앙상블 방법
+>> 하나의 모델말고 여러 모델을 붙여서 사용해봅시다. 더 성능이 좋을 수도 있어요
+
+> ### 2.7.4. 최상의 모델과 오차 분석
+>> RandomForestRegressor는 각 특성의 상대적인 중요도를 알려준다.
+>> feature_importances = grid_search.best_estimator_.feature_importances
+
+> ### 2.7.5. 테스트 세트로 시스템 평가하기
+
+## 2.8 론칭, 모니터링, 그리고 시스템 유지 보수
+
+# Chapter3. 분류
+
+
+ 
+
+
+
+
+
+
+                         
+
+
+
+
 
 
 
