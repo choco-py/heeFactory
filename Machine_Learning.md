@@ -305,6 +305,7 @@ from sklearn.model_selection import cross_val_score
 scores = cross_val_score(tree_reg, housing_prepared, housing_labels,
                          scoring='neg_mean_squared_error', cv=10)
 tree_rmse_scores = np.sqrt(-scores)
+</code></pre>
 
 >> * Random Forest 훈련 시키기
 
@@ -373,9 +374,85 @@ for mean_score, params in zip(cvres['mean_test_score'[, cvre['params']):
 
 > ### 2.7.5. 테스트 세트로 시스템 평가하기
 
-## 2.8 론칭, 모니터링, 그리고 시스템 유지 보수
+## 2.8. 론칭, 모니터링, 그리고 시스템 유지 보수
 
 # Chapter3. 분류
+
+## 3.1. MNIST
+> scikit-learn 에서 MNIST 받을 수 있다!
+<pre><code>
+from sklearn.datasets import fetch_mldata
+
+mnist = fetch_mldata('MNIST original')
+</code></pre>
+
+## 3.2. 이진 분류기 훈련
+> 문제를 단순화 해서 '5-감지기'를 만들어 봅시다.
+
+<pre><code>
+
+# prepare dataset 
+y_train_5 = (y_train==5)
+y_test_5 = (y_test ==5)
+
+# training with SGD
+from sklearn.linear_model import SGDClassifier
+
+sgd_clf = SGDClassifier(max_iter=5, random_state=42)
+sgd_clf.fit(X_train. y_train_5)
+
+# predict 
+sgd_clf.predict([some_digit])
+
+</code></pre>
+
+## 3.3. 성능 측정 
+> ### 3.3.1. 교차 검증을 사용한 정확도 측정
+>> * 교차 검증 직접 구현하기!
+<pre><code>
+from sklearn.model_selection import StartifiedKFold
+from sklearn.base import clone
+
+# StratifiedFold는 클래스별 비율이 유지되도록 폴드를 만들기 위해 계층적 샘플링을 수행
+skfolds = StratifiedKFold(n_splots=3, randome_state=42)
+
+from train_index, test_index in skfolds.split(X_train, y_train):
+    clone_clf = clone(sgd_clf)
+    X_train_folds = X_train[train_index]
+    y_train_folds = y_train[train_index]
+    X_test_fold = X_train[test_index]
+    y_test_fold = Y_train[test_index]
+    
+   clone_clf.fit(X_train_folds, y_train_folds)
+   y_pred = clone_clf.predict(X_test_fold)
+   n_correct = sum(y_pred == y_test_fold)
+   print(n_correct / len(y_pred))
+</code></pre>
+
+>> * scikit-learn 으로 교차검증 하기!
+
+<code><pre>
+from sklearn.model_selection import cross_val_score
+cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring='accuracy')
+</code></pre>
+
+>> * 더미 분류기 만들기! 
+
+<code><pre>
+from sklearn.base import BaseEstimator
+
+class Never5Classifier(BaseEstimator):
+    def fit(X
+
+
+
+    
+
+
+
+
+
+
 
 
  
