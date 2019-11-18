@@ -446,7 +446,8 @@ from sklearn.model_selection import confusion_matrix
 
 y_train_pred = cross_val_predict{(sgd_clf, X_train, y_train_5, cv=3)
 confusion_matrix(y_train_5, y_train_pred)
-</pre></code>
+
+</code></pre>
 
 >> 오차행렬
 
