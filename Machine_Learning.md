@@ -473,20 +473,21 @@ FPR, TPR, thresholds = roc_curve(y_train_5, y_scores)
 
 ## 3.5. 에러 분석
 > 오차 행렬을 확인하기
-<code><pre>
- y_train_pred = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=3)
- conf_mx = confusion_matrix(y_train, y_train_pred)
- 
+
+<pre><code>
+y_train_pred = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=3)
+conf_mx = confusion_matrix(y_train, y_train_pred)
+
  # mat plot으로 그려보기
- plt.matshow(conf_mx, cmap=plt.cm.gray)
- 
+plt.matshow(conf_mx, cmap=plt.cm.gray)
+
  # 에러 비율 plot 그리기
- row_sums = conf_mx.sum(axis=1, keepdims=True)
- norm_conf_mx = conf_mx/row_sums
+row_sums = conf_mx.sum(axis=1, keepdims=True)
+norm_conf_mx = conf_mx/row_sums
+
+plt_matshow(norm_conf_mx, cmap=plt.cm.gray)
  
- plt_matshow(norm_conf_mx, cmap=plt.cm.gray)
- 
- </pre></code>
+</code></pre>
 
 
 ## 3.6. 다중 레이블 분류
@@ -495,8 +496,8 @@ FPR, TPR, thresholds = roc_curve(y_train_5, y_scores)
 > 여기서는 이진 분류를 여러개로 해야하는 것이니까, 1번째 분류법: 숫자가 큰지 2번째 분류법: 홀수인지 
 
 
-<code><pre>
-from skleanr.neighbors import KNeighborsClassifier
+<pre><code>
+from sklearn.neighbors import KNeighborsClassifier
 
 y_train_large = (y_train>=7)
 y_train_odd = (y_train%2 ==1)
@@ -519,15 +520,6 @@ f1_score(y_multilabel, y_train_knn_pred, average='macro')
 
 ## 3.7. 다중 출력 분류
 
-
-
-
-
-<code><pre>
-from sklearn.base import BaseEstimator
-
-class Never5Classifier(BaseEstimator):
-    def fit(X
 
 
 
