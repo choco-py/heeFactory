@@ -1,6 +1,6 @@
  Hands-On Machine Learning with Scikit-Learn & TensorFlow
 ========================================================
-Sohee Hwang, Start: 2019/8/8 Last Modified: 2019/9/25
+Sohee Hwang, Start: 2019/8/8 Last Modified: 2019/11/18
 --------------------------------------------------------
 
 # Chapter1. 한눈에 보는 머신러닝
@@ -419,9 +419,9 @@ skfolds = StratifiedKFold(n_splots=3, randome_state=42)
 from train_index, test_index in skfolds.split(X_train, y_train):
     clone_clf = clone(sgd_clf)
     X_train_folds = X_train[train_index]
-    y_train_folds = y_train[train_index]
+    Y_train_folds = y_train[train_index]
     X_test_fold = X_train[test_index]
-    y_test_fold = Y_train[test_index]
+    Y_test_fold = Y_train[test_index]
     
    clone_clf.fit(X_train_folds, y_train_folds)
    y_pred = clone_clf.predict(X_test_fold)
@@ -437,6 +437,91 @@ cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring='accuracy')
 </code></pre>
 
 >> * 더미 분류기 만들기! 
+
+> ### 3.3.2. 오차 행렬
+>> cross_val_predict 을 이용하면 구할 수 있다
+<code><pre>
+from skleanr.model_selection import cross_val_predict
+from sklearn.model_selection import confusion_matrix
+
+y_train_pred = cross_val_predict{(sgd_clf, X_train, y_train_5, cv=3)
+confusion_matrix(y_train_5, y_train_pred)
+</pre></code>
+
+>> 오차행렬
+
+
+> ### 3.3.5. ROC 곡선
+>> ROC(Receiver Operating Characteristic) 
+>> ROC 곡선은 거짓양성비율(FPR)에 대한 진짜 양성 비율(TPR)의 곡선
+>> FPR = 1-TNR (TNR은 진짜 음성 비율/특이도(specificity))
+>> 즉, ROC 곡선은 재현율에 대한 1-특이도 그래프
+>> * 그니까, ROC 곡선은 양성이라고 예측한 것들을 가지고, 거짓 양성 비율과 진짜 양성 비율을 그린 것!
+
+<code><pre>
+from sklearn.metrics import roc_curve
+
+FPR, TPR, thresholds = roc_curve(y_train_5, y_scores)
+</pre></code>
+
+>> AUC는 ROC curve로 생기는 아래 면적의 크기!! 얘가 크면(<1) 분류기가 잘된거지~ 완전 랜덤 분류기는 0.5
+>> * ROC curve vs PR curve : 양성 클래스가 드물거나 거짓음성보다 거짓 양성이 중요할 때 PR곡선! 아닐 때는 다 ROC
+
+## 3.4. 다중 분류
+> 다중 분류는 둘 이상의 클래스를 구별하는 것
+> 이진 분류기(서포트 벡터 머신, 선형)를 여러개 사용하거나 다중 분류기(랜덤 포레스트, 나이브 베이즈) 사용
+
+## 3.5. 에러 분석
+> 오차 행렬을 확인하기
+<code><pre>
+ y_train_pred = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=3)
+ conf_mx = confusion_matrix(y_train, y_train_pred)
+ 
+ # mat plot으로 그려보기
+ plt.matshow(conf_mx, cmap=plt.cm.gray)
+ 
+ # 에러 비율 plot 그리기
+ row_sums = conf_mx.sum(axis=1, keepdims=True)
+ norm_conf_mx = conf_mx/row_sums
+ 
+ plt_matshow(norm_conf_mx, cmap=plt.cm.gray)
+ 
+ </pre></code>
+
+
+## 3.6. 다중 레이블 분류
+> 하나의 데이터가 여러개의 label을 가질 경우
+> 여기서 사용한 방법은 KNN 알고리즘
+> 여기서는 이진 분류를 여러개로 해야하는 것이니까, 1번째 분류법: 숫자가 큰지 2번째 분류법: 홀수인지 
+
+
+<code><pre>
+from skleanr.neighbors import KNeighborsClassifier
+
+y_train_large = (y_train>=7)
+y_train_odd = (y_train%2 ==1)
+y_multilabel = np.c_[y_train_larget, y_train_odd]
+
+knn_clf = KNeighborsClassifier()
+knn_clf.fit(X_train, y_multilabel)
+
+knn_clf.predict(test)
+
+y_train_knn_pred = cross_val_predict(knn_clf, X_train, y_multilabel, cv=3, n_jopbs=-1)
+f1_score(y_multilabel, y_train_knn_pred, average='macro')
+
+</code></pre>
+
+
+> 만약 label 별로 가진 데이터 갯수가 다를 경우, label class의 support의 가중치를 줄수 있다!
+>> f1_score(y_multilabel, y_train_knn_pred, averag='wieghted')
+
+
+## 3.7. 다중 출력 분류
+
+
+
+
 
 <code><pre>
 from sklearn.base import BaseEstimator
