@@ -209,12 +209,12 @@ cat_encoder.categories_ = ['1H OCEAN', 'INLAND', 'NEAR BAY', ...]
 
 > ### 2.5.4 특성 스케일링
 >> *min-max 스케일링*과 *표준화(standardization)* 가 대표적
->> 1. min-max 스케일링(normalization)
->>> scikitlearn-> MinMaxScaler 변환기 제공 (0~1 사이가 싫다면, feature_range로 수정 가능)
->> 2. 표준화(standardiation)
->>> 평균을 빼고 표준편차로 나누어서 결과 분포의 분산이 1이 되도록 만듬
->>> 범위의 상/하한이 없지만, 이상치에 영향을 덜받아 좋음
->>> scikitlearn -> StandarScaler
+>> 1. min-max 스케일링(normalization)<br>
+>>> scikitlearn-> MinMaxScaler 변환기 제공 (0~1 사이가 싫다면, feature_range로 수정 가능)<br>
+>> 2. 표준화(standardiation)<br>
+>>> 평균을 빼고 표준편차로 나누어서 결과 분포의 분산이 1이 되도록 만듬<br>
+>>> 범위의 상/하한이 없지만, 이상치에 영향을 덜받아 좋음<br>
+>>> scikitlearn -> StandarScaler<br>
 
 >>> *훈련 데이터에 대해서만 fit() / 테스트 데이터에 대해서는 transform()*
 
@@ -296,8 +296,8 @@ tree_rmse = np.sqrt(tree_mse)
 </code></pre>
 
 > ### 2.6.2. 교차 검증을 사용한 평가
->> 역시나 sckit-learn 에는 교차검증 기능이 있다!
->> K-fold-cross-validation: 훈련 세트를 fold라 불리는 10개의 subset으로 무작위 분할하고, 10번 훈련/평가 한다! 
+>> 역시나 sckit-learn 에는 교차검증 기능이 있다!<br>
+>> K-fold-cross-validation: 훈련 세트를 fold라 불리는 10개의 subset으로 무작위 분할하고, 10번 훈련/평가 한다! <br>
 
 <pre><code>
 from sklearn.model_selection import cross_val_score
@@ -331,7 +331,7 @@ my_model_loaded = joblib.load('my_model.pkl')
 
 ## 2.7. 모델 세부 튜닝
 > ### 2.7.1. 그리드 탐색
->> 가장 쉬운거는 그냥 다 수동으로 조정하는 것이지요
+>> 가장 쉬운거는 그냥 다 수동으로 조정하는 것이지요<br>
 >> 근데 또 scikit-learn은 가지고 있다! GridSearchCV!!!!!
 
 <pre><code>
@@ -369,8 +369,8 @@ for mean_score, params in zip(cvres['mean_test_score'[, cvre['params']):
 >> 하나의 모델말고 여러 모델을 붙여서 사용해봅시다. 더 성능이 좋을 수도 있어요
 
 > ### 2.7.4. 최상의 모델과 오차 분석
->> RandomForestRegressor는 각 특성의 상대적인 중요도를 알려준다.
->> feature_importances = grid_search.best_estimator_.feature_importances
+>> RandomForestRegressor는 각 특성의 상대적인 중요도를 알려준다.<br>
+>> feature_importances = grid_search.best_estimator_.feature_importances<br>
 
 > ### 2.7.5. 테스트 세트로 시스템 평가하기
 
@@ -407,8 +407,8 @@ sgd_clf.predict([some_digit])
 </code></pre>
 
 ## 3.3. 성능 측정 
-> ### 3.3.1. 교차 검증을 사용한 정확도 측정
->> * 교차 검증 직접 구현하기!
+> ### 3.3.1. 교차 검증을 사용한 정확도 측정<br>
+>> * 교차 검증 직접 구현하기!<br>
 <pre><code>
 from sklearn.model_selection import StartifiedKFold
 from sklearn.base import clone
@@ -454,10 +454,10 @@ confusion_matrix(y_train_5, y_train_pred)
 
 > ### 3.3.5. ROC 곡선
 >> ROC(Receiver Operating Characteristic) 
->> ROC 곡선은 거짓양성비율(FPR)에 대한 진짜 양성 비율(TPR)의 곡선
->> FPR = 1-TNR (TNR은 진짜 음성 비율/특이도(specificity))
->> 즉, ROC 곡선은 재현율에 대한 1-특이도 그래프
->> * 그니까, ROC 곡선은 양성이라고 예측한 것들을 가지고, 거짓 양성 비율과 진짜 양성 비율을 그린 것!
+>> ROC 곡선은 거짓양성비율(FPR)에 대한 진짜 양성 비율(TPR)의 곡선<br>
+>> FPR = 1-TNR (TNR은 진짜 음성 비율/특이도(specificity))<br>
+>> 즉, ROC 곡선은 재현율에 대한 1-특이도 그래프<br>
+>> * 그니까, ROC 곡선은 양성이라고 예측한 것들을 가지고, 거짓 양성 비율과 진짜 양성 비율을 그린 것!<br>
 
 <code><pre>
 from sklearn.metrics import roc_curve
@@ -465,12 +465,12 @@ from sklearn.metrics import roc_curve
 FPR, TPR, thresholds = roc_curve(y_train_5, y_scores)
 </pre></code>
 
->> AUC는 ROC curve로 생기는 아래 면적의 크기!! 얘가 크면(<1) 분류기가 잘된거지~ 완전 랜덤 분류기는 0.5
->> * ROC curve vs PR curve : 양성 클래스가 드물거나 거짓음성보다 거짓 양성이 중요할 때 PR곡선! 아닐 때는 다 ROC
+>> AUC는 ROC curve로 생기는 아래 면적의 크기!! 얘가 크면(<1) 분류기가 잘된거지~ 완전 랜덤 분류기는 0.5<br>
+>> * ROC curve vs PR curve : 양성 클래스가 드물거나 거짓음성보다 거짓 양성이 중요할 때 PR곡선! 아닐 때는 다 ROC<br>
 
 ## 3.4. 다중 분류
-> 다중 분류는 둘 이상의 클래스를 구별하는 것
-> 이진 분류기(서포트 벡터 머신, 선형)를 여러개 사용하거나 다중 분류기(랜덤 포레스트, 나이브 베이즈) 사용
+> 다중 분류는 둘 이상의 클래스를 구별하는 것<br>
+> 이진 분류기(서포트 벡터 머신, 선형)를 여러개 사용하거나 다중 분류기(랜덤 포레스트, 나이브 베이즈) 사용<br>
 
 ## 3.5. 에러 분석
 > 오차 행렬을 확인하기
@@ -492,9 +492,9 @@ plt_matshow(norm_conf_mx, cmap=plt.cm.gray)
 
 
 ## 3.6. 다중 레이블 분류
-> 하나의 데이터가 여러개의 label을 가질 경우
-> 여기서 사용한 방법은 KNN 알고리즘
-> 여기서는 이진 분류를 여러개로 해야하는 것이니까, 1번째 분류법: 숫자가 큰지 2번째 분류법: 홀수인지 
+> 하나의 데이터가 여러개의 label을 가질 경우<br>
+> 여기서 사용한 방법은 KNN 알고리즘<br>
+> 여기서는 이진 분류를 여러개로 해야하는 것이니까, 1번째 분류법: 숫자가 큰지 2번째 분류법: 홀수인지 <br>
 
 
 <pre><code>
@@ -515,7 +515,7 @@ f1_score(y_multilabel, y_train_knn_pred, average='macro')
 </code></pre>
 
 
-> 만약 label 별로 가진 데이터 갯수가 다를 경우, label class의 support의 가중치를 줄수 있다!
+> 만약 label 별로 가진 데이터 갯수가 다를 경우, label class의 support의 가중치를 줄수 있다! <br>
 >> f1_score(y_multilabel, y_train_knn_pred, averag='wieghted')
 
 
