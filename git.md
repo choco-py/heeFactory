@@ -24,4 +24,7 @@ $ git reset HEAD^ // 위와 동일
 $ git reset HEAD~2 // 마지막 2개의 commit을 취소
 // [방법 3] commit을 취소하고 해당 파일들은 unstaged 상태로 워킹 디렉터리에서 삭제
 $ git reset --hard HEAD^
-https://gmlwjd9405.github.io/2018/05/25/git-add-cancle.html
+
+
+// push 강제
+git push -u origin +master
